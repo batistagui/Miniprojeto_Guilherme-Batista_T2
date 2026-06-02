@@ -125,3 +125,33 @@ print(f"\n  Nulos totais após limpeza: {df_limpo.isnull().sum().sum()}")
 
 df_limpo.to_csv(SAIDA_LIMPO, index=False, encoding="utf-8")
 print(f"  → df_limpo.csv salvo em: {SAIDA_LIMPO}")
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SPRINT 4 — ESTATÍSTICAS DESCRITIVAS
+# Coluna CL_FHL — Número de filhos do cliente
+# Parâmetros: média, mediana, desvio padrão, moda, mín, máx, contagem, quartis
+# ─────────────────────────────────────────────────────────────────────────────
+
+print("\n" + "=" * 65)
+print("  SPRINT 4 — ESTATÍSTICAS DESCRITIVAS — CL_FHL (Nº de Filhos)")
+print("=" * 65)
+
+serie = df_limpo['CL_FHL']
+
+print(f"\n  Coluna      : CL_FHL — Número de Filhos do Cliente")
+print(f"  Contagem    : {serie.count():,}")
+print(f"  Média       : {serie.mean():.4f}")
+print(f"  Mediana     : {serie.median()}")
+print(f"  Desvio Pad  : {serie.std():.4f}")
+print(f"  Moda        : {serie.mode().tolist()}")
+print(f"  Mínimo      : {serie.min()}")
+print(f"  Máximo      : {serie.max()}")
+print(f"  Q1 (25%)    : {serie.quantile(0.25)}")
+print(f"  Q2 (50%)    : {serie.quantile(0.50)}")
+print(f"  Q3 (75%)    : {serie.quantile(0.75)}")
+
+print("\n  Distribuição de frequência:")
+dist = serie.value_counts().sort_index()
+for val, qtd in dist.items():
+    pct = qtd / serie.count() * 100
+    print(f"    {val} filho(s): {qtd:>7,} registros ({pct:.1f}%)")
