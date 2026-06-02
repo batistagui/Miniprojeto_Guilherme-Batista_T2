@@ -208,3 +208,53 @@ pivot = pd.pivot_table(
     fill_value=0
 )
 print(pivot.to_string())
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RELATÓRIO FINAL — CONCLUSÕES E INSIGHTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+print("\n" + "=" * 65)
+print("  RELATÓRIO FINAL — CONCLUSÕES E INSIGHTS")
+print("=" * 65)
+
+print("""
+  1. VOLUME DE DUPLICATAS EXPRESSIVO
+     A base original continha 96.553 linhas duplicadas (11,6%).
+     Sem esse tratamento, qualquer contagem de compras estaria
+     inflada em quase 12%, comprometendo todos os relatórios.
+
+  2. CATEGORIAS INVÁLIDAS INDICAM FALHA DE CADASTRO
+     A categoria '#N/D' apareceu em 3.228 registros de PR_CAT,
+     indicando falha no sistema de cadastro de produtos. Esses
+     registros foram sinalizados como 'Sem Categoria' via if/else
+     e devem ser corrigidos na origem dos dados.
+
+  3. PERFIL FAMILIAR DOS CLIENTES (CL_FHL)
+     A maioria dos clientes não possui filhos: moda e mediana = 0,
+     com 52,5% dos registros em CL_FHL = 0. A média de 1,15 está
+     distorcida pelos clientes com 3 e 4 filhos. O alto desvio
+     padrão (1,42) sugere que segmentação por faixa familiar seria
+     mais informativa do que usar a média como referência.
+
+  4. GÊNERO FEMININO LIDERA O VOLUME DE COMPRAS
+     F realizou 382.427 compras (52,1%) contra 351.020 do gênero M
+     (47,9%). Como a proporção de clientes é similar (519 F × 481 M),
+     isso indica maior frequência de compra per capita no gênero F.
+
+  5. ALIMENTOS DOMINA O VOLUME DE COMPRAS
+     ALIMENTOS concentra 52,4% de todas as compras (384.197) com
+     120 produtos distintos. HIGIENE (18,8%) e LIMPEZA (17,5%)
+     completam o top 3. A ausência de coluna de preço impede cálculo
+     de receita — os agrupamentos refletem volume, não faturamento.
+
+  6. POTENCIAL TEMPORAL E PROBLEMAS REMANESCENTES
+     A base cobre Jan/2019 a Dez/2022 (quase 4 anos), abrindo espaço
+     para análises de sazonalidade e tendência — só possíveis após
+     a conversão de DATA para datetime realizada neste projeto.
+     Problema remanescente: ausência de coluna de valor monetário
+     limita os agrupamentos a volume de compras.
+""")
+
+print("=" * 65)
+print("  Script executado com sucesso! Arquivo 'df_limpo.csv' gerado.")
+print("=" * 65)
