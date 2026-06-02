@@ -155,3 +155,56 @@ dist = serie.value_counts().sort_index()
 for val, qtd in dist.items():
     pct = qtd / serie.count() * 100
     print(f"    {val} filho(s): {qtd:>7,} registros ({pct:.1f}%)")
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SPRINT 5 — PADRÕES DE AGRUPAMENTO
+# groupby 1: volume de compras por gênero (CL_GENERO)
+# groupby 2: volume de compras por categoria (PR_CAT)
+# bônus: pivot_table gênero × categoria
+# ─────────────────────────────────────────────────────────────────────────────
+
+print("\n" + "=" * 65)
+print("  SPRINT 5 — PADRÕES DE AGRUPAMENTO")
+print("=" * 65)
+
+# Agrupamento 1 — por gênero
+print("\n[Agrupamento 1] Compras por Gênero (CL_GENERO):")
+agg_genero = df_limpo.groupby('CL_GENERO').agg(
+    Qtd_Compras     = ('CO_ID', 'count'),
+    Clientes_Unicos = ('CL_ID', 'nunique')
+).sort_values('Qtd_Compras', ascending=False)
+agg_genero['Pct_Compras'] = (
+    agg_genero['Qtd_Compras'] / agg_genero['Qtd_Compras'].sum() * 100
+).round(2)
+print(agg_genero.to_string())
+genero_top = agg_genero.index[0]
+print(f"\n  → Gênero com mais compras: '{genero_top}' "
+      f"({agg_genero.loc[genero_top, 'Qtd_Compras']:,} compras — "
+      f"{agg_genero.loc[genero_top, 'Pct_Compras']}%)")
+
+# Agrupamento 2 — por categoria
+print("\n[Agrupamento 2] Compras por Categoria de Produto (PR_CAT):")
+agg_cat = df_limpo.groupby('PR_CAT').agg(
+    Qtd_Compras     = ('CO_ID', 'count'),
+    Produtos_Unicos = ('PR_ID', 'nunique')
+).sort_values('Qtd_Compras', ascending=False)
+agg_cat['Pct_Compras'] = (
+    agg_cat['Qtd_Compras'] / agg_cat['Qtd_Compras'].sum() * 100
+).round(2)
+print(agg_cat.to_string())
+cat_top = agg_cat.index[0]
+print(f"\n  → Categoria líder: '{cat_top}' "
+      f"({agg_cat.loc[cat_top, 'Qtd_Compras']:,} compras — "
+      f"{agg_cat.loc[cat_top, 'Pct_Compras']}%)")
+
+# Bônus — pivot_table
+print("\n[Agrupamento 3 — Bônus] Pivot: Gênero × Categoria (nº de compras):")
+pivot = pd.pivot_table(
+    df_limpo,
+    values='CO_ID',
+    index='CL_GENERO',
+    columns='PR_CAT',
+    aggfunc='count',
+    fill_value=0
+)
+print(pivot.to_string())
