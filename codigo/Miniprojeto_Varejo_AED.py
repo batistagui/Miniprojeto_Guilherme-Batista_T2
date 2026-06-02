@@ -51,3 +51,32 @@ print("\n  Tipos de dados por coluna:")
 print(df.dtypes.to_string())
 print("\n  Primeiras 5 linhas:")
 print(df.head(5).to_string())
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SPRINT 2 — DIAGNÓSTICO DE QUALIDADE
+# Identificar problemas ANTES de limpar
+# Problemas encontrados: 96.553 duplicatas, '#N/D' em PR_CAT, DATA como string.
+# ─────────────────────────────────────────────────────────────────────────────
+
+print("\n" + "=" * 65)
+print("  SPRINT 2 — DIAGNÓSTICO DE QUALIDADE DOS DADOS")
+print("=" * 65)
+
+print("\n[Problema 1] Valores nulos reais (NaN) por coluna:")
+nulos = df.isnull().sum()
+if nulos.sum() == 0:
+    print("  → Nenhum NaN detectado.")
+else:
+    print(nulos[nulos > 0].to_string())
+
+print("\n[Problema 2] Strings disfarçadas de nulo:")
+strings_invalidas = ['NULL', 'null', 'N/A', 'n/a', '', ' ', '#N/D', 'nan']
+for col in df.select_dtypes(include=['object', 'str']).columns:
+    n = df[col].isin(strings_invalidas).sum()
+    if n > 0:
+        print(f"  → '{col}': {n:,} ocorrências de valor inválido")
+
+print(f"\n[Problema 3] Linhas completamente duplicadas: {df.duplicated().sum():,}")
+
+print("\n[Problema 4] Coluna DATA está como string — precisa ser datetime:")
+print(f"  → Tipo atual: {df['DATA'].dtype}  |  Exemplo: {df['DATA'].iloc[0]}")
